@@ -1,2 +1,2 @@
 # PayForPlay
-Insert coin for play games.
+Insert coin to play games.
