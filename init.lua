@@ -1,14 +1,17 @@
+r = node.restart
+
 pinCoin = 1
 pinLcdCS = 2
 pinLcdCLK = 5
 pinLcdDAT = 7
 
 PWD='defaultpwd'
---dofile('secrets.lua')
+dofile('secrets.lua')
 
 timeLimit = 120
 initialSecondsPerCoin = 3600
 secondsPerCoin = initialSecondsPerCoin
+resumePriceCounter = 0
 freePlay = false
 isTimeValid = false
 isWifiConnected = false
@@ -66,7 +69,15 @@ tmr.create():alarm(1000, tmr.ALARM_AUTO, function()
         end
     end
     if timeLimit > 0 then
-        timeLimit = timeLimit - 1;
+        timeLimit = timeLimit - 1
+        resumePriceCounter = 0
+    else
+        if secondsPerCoin ~= initialSecondsPerCoin then
+            resumePriceCounter = resumePriceCounter + 1
+            if resumePriceCounter > 1200 then
+                secondsPerCoin = initialSecondsPerCoin
+            end
+        end
     end
     updateLcdStatusText()
 end)
@@ -206,4 +217,3 @@ ht1621WriteCommand(0x29);   	--1/3 bias 4 commons//    1/2 bias 3 commons//0x04
 
 updateLcd('----')
 
-r = node.restart
